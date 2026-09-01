@@ -1,0 +1,17 @@
+{
+    "name": "moohamad/systeme-notation-universitaire",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "App\\Database\\": "database/",
+            "App\\Config\\": "config/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mouhamadoufallbah",
+            "email": "mouhamadoufall.bah@gmail.com"
+        }
+    ],
+    "require": {}
+}
