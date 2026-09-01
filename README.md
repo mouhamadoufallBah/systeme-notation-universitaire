@@ -17,3 +17,15 @@ C'est point d'entre de notre application
 ### Quels éléments ne devraient jamais se trouver dans le dossier public ?
 
 ### Comment avez-vous réparti les responsabilités entre vos dossiers ?
+
+### Quelle relation avez-vous établie entre les deux classes ?
+On a etablie une realtion d'heritage entre les deux classe
+### Pourquoi ne peut-on pas créer directement un AbstractDocument ?
+une classe abstrait ne peut pas etre instanciable.
+
+### Pourquoi l’identifiant peut-il être absent avant la sauvegarde ?
+Car c'est la base de donnee qui genere l'id
+
+### Quel principe de conception est favorisé par la protection des propriétés ?
+C'est l'encapsulation.
+
