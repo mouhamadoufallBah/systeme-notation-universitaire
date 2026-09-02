@@ -4,45 +4,49 @@ namespace App\Repository;
 
 abstract class BaseRepository
 {
-    private \PDO $db;
+    private  \PDO $instance;
 
-    public function __construct(\PDO $db)
+    protected function __construct(\PDO $pdo)
     {
-        $this->db = $db;
+        $this->instance = $pdo;
     }
 
-    public function save(array $copieData): int|string
+    protected function query(string $sql, bool $single = true): mixed
     {
-        $sql = "INSERT INTO copies_examen (etudiant_id, examen_id, note, est_en_retard) 
-                VALUES (:etudiant_id, :examen_id, :note, :est_en_retard)";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            'etudiant_id' => $copieData['etudiant_id'] ?? null,
-            'examen_id'   => $copieData['examen_id'] ?? null,
-            'note'        => $copieData['note'] ?? 0.0,
-            'est_en_retard' => $copieData['est_en_retard'] ?? false,
-        ]);
-
-        return $this->db->lastInsertId();
+        $query = $this->instance
+            ->query($sql);
+        return $single ? $query->fetch(\PDO::FETCH_OBJ) : $query->fetchAll(\PDO::FETCH_OBJ);
     }
 
-    public function findAll(): array
+    private function prepare(string $sql, array $datas = []): \PDOStatement
     {
-        $sql = "SELECT * FROM copies_examen";
-        $stmt = $this->db->query($sql);
-
-        return $stmt->fetchAll(\PDO::FETCH_OBJ);
+        $prepare = $this->instance
+            ->prepare($sql);
+        $prepare->execute($datas);
+        return $prepare;
     }
 
-    public function findById(int|string $id): ?object
+    protected function executeQuery(string $sql, array $datas = [], bool $single = true): mixed
     {
-        $sql = "SELECT * FROM copies_examen WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute(['id' => $id]);
+        $statement = self::prepare($sql, $datas);
+        return $single ? $statement->fetch(\PDO::FETCH_OBJ) : $statement->fetchAll(\PDO::FETCH_OBJ);
+    }
 
-        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+    protected function executeUpdate(string $sql, array $datas = []): int|string
+    {
+        $statement = self::prepare($sql, $datas);
+        return (str_starts_with(strtoupper(trim($sql)), 'INSERT')) ? $this->instance
+            ->lastInsertId() : $statement->rowCount();
+    }
 
-        return $result !== false ? $result : null;
+    protected function lastInsertedId(): int
+    {
+        return $this->instance->lastInsertId();
+    }
+
+    protected function getAllData(string $tableName): array
+    {
+        $sql = "SELECT * FROM $tableName";
+        return self::query($sql, false);
     }
 }
