@@ -13,5 +13,7 @@
             "email": "mouhamadoufall.bah@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "vlucas/phpdotenv": "^5.7"
+    }
 }

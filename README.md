@@ -29,3 +29,13 @@ Car c'est la base de donnee qui genere l'id
 ### Quel principe de conception est favorisé par la protection des propriétés ?
 C'est l'encapsulation.
 
+
+### Quelle classe doit être responsable de la connexion ?
+C'est la classe databse.
+### Faut-il créer une nouvelle connexion pour chaque requête SQL ?
+Il sera en singleton c'est a dire qu'il aura une seul instance.
+### Où placer les identifiants de connexion ?
+Dans le fichier .env
+### Pourquoi utiliser PDO ?
+
+
