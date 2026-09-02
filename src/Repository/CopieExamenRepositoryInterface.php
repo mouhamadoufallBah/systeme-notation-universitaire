@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\CopieExamen;
+
 interface CopieExamenRepositoryInterface
 {
-    public function save(array $copieData): int|string;
+    public function save(CopieExamen $copieData): int|string;
 
     public function findAll(): array;
 

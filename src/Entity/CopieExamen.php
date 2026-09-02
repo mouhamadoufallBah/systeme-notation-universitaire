@@ -9,12 +9,12 @@ class CopieExamen extends AbstractDocument
     private float $penaliteAppliquee;
 
     public function __construct(
-        \DateTime $dateDepot,
-        \DateTime $dateLimite,
+        \DateTimeImmutable $dateDepot,
+        \DateTimeImmutable $dateLimite,
         float $noteBrute,
         float $noteFinale,
         float $penaliteAppliquee,
-        ?int $id
+        ?int $id = null
     ) {
         parent::__construct($dateDepot, $dateLimite, $id);
         $this->setNoteBrute($noteBrute);
@@ -29,7 +29,6 @@ class CopieExamen extends AbstractDocument
 
     public function setNoteBrute(float $noteBrute): void
     {
-        $this->validerNote($noteBrute);
         $this->noteBrute = $noteBrute;
     }
 
@@ -40,7 +39,6 @@ class CopieExamen extends AbstractDocument
 
     public function setNoteFinale(float $noteFinale): void
     {
-        $this->validerNote($noteFinale);
         $this->noteFinale = $noteFinale;
     }
 
@@ -54,10 +52,4 @@ class CopieExamen extends AbstractDocument
         $this->penaliteAppliquee = $penaliteAppliquee;
     }
 
-    private function validerNote(float $note): void
-    {
-        if ($note < 0 || $note > 20) {
-            throw new \Exception("La note doit être comprise entre 0 et 20. Valeur reçue : " . $note);
-        }
-    }
 }

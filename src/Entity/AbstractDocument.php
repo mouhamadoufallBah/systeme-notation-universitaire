@@ -5,10 +5,10 @@ namespace App\Entity;
 abstract class AbstractDocument
 {
     private ?int $id;
-    private \DateTime $dateDepot;
-    private \DateTime $dateLimite;
+    private \DateTimeImmutable $dateDepot;
+    private \DateTimeImmutable $dateLimite;
 
-    public function __construct(\DateTime $dateDepot, \DateTime $dateLimite, ?int $id = null)
+    public function __construct(\DateTimeImmutable $dateDepot, \DateTimeImmutable $dateLimite, ?int $id = null)
     {
         $this->id = $id;
         $this->dateDepot = $dateDepot;
@@ -25,22 +25,22 @@ abstract class AbstractDocument
         $this->id = $id;
     }
 
-    public function getDateDepot(): \DateTime
+    public function getDateDepot(): \DateTimeImmutable
     {
         return $this->dateDepot;
     }
 
-    public function setDateDepot(\DateTime $dateDepot): void
+    public function setDateDepot(\DateTimeImmutable $dateDepot): void
     {
         $this->dateDepot = $dateDepot;
     }
 
-    public function getDateLimite(): \DateTime
+    public function getDateLimite(): \DateTimeImmutable
     {
         return $this->dateLimite;
     }
 
-    public function setDateLimite(\DateTime $dateLimite): void
+    public function setDateLimite(\DateTimeImmutable $dateLimite): void
     {
         $this->dateLimite = $dateLimite;
     }
