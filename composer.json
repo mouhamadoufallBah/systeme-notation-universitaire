@@ -3,8 +3,8 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "App\\Database\\": "database/",
-            "App\\Config\\": "config/"
+            "Database\\": "database/",
+            "Config\\": "config/"
         }
     },
     "authors": [

@@ -1,16 +1,16 @@
 <?php
 
-use App\Core\Database;
+use App\Repository\Database;
 
 define("BASE_PATH", dirname(__DIR__));
 
 require_once(BASE_PATH."/vendor/autoload.php");
 
-$dotenv = Dotenv\Dotenv::createImmutable(BASE_PATH);
-$dotenv->load();
+require_once(BASE_PATH."/config/bootstrap.php");
 
-$db = Database::getConnection();
 
-var_dump($db);
+// $db = Database::getConnection();
+
+// var_dump($db);
 
 

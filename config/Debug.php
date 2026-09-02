@@ -1,5 +1,5 @@
 <?php
 
-namespace App\Core;
+namespace Config;
 
 class Debug{}
