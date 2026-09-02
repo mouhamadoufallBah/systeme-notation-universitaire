@@ -38,4 +38,12 @@ Il sera en singleton c'est a dire qu'il aura une seul instance.
 Dans le fichier .env
 ### Pourquoi utiliser PDO ?
 
+### Pourquoi créer un objet supplémentaire alors que $_POST contient déjà les données ?
+Parce qu'on est en poo on doit utiliser des objet maintenant pourquoi on utilise pas l'entite parce que le dto va se charger d'envoyer que les donne a inserer
+### Quelle différence observez-vous entre cet objet et CopieExamen ?
+copi exam a tout les champs de notre table tandisque le SoumettreCopieDTO contient que les champs a inserer lors de l'ajout note
+### Cet objet doit-il posséder un identifiant de base de données ?
+non
+### Où la conversion des chaînes de dates doit-elle avoir lieu ?
+au niveau du controller
 
