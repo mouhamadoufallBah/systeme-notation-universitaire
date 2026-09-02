@@ -4,44 +4,45 @@ namespace App\Repository;
 
 abstract class BaseRepository
 {
-    private  \PDO $instance;
+    private \PDO $db;
 
-    protected function __construct(\PDO $pdo)
+    public function __construct(\PDO $db)
     {
-        $this->instance = $pdo;
+        $this->db = $db;
     }
 
-    protected function query(string $sql, bool $single = true): mixed
+    public function save(array $copieData): int|string
     {
-        $query = $this->instance
-            ->query($sql);
-        return $single ? $query->fetch(\PDO::FETCH_OBJ) : $query->fetchAll(\PDO::FETCH_OBJ);
+        $sql = "INSERT INTO copies_examen (etudiant_id, examen_id, note, est_en_retard) 
+                VALUES (:etudiant_id, :examen_id, :note, :est_en_retard)";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'etudiant_id' => $copieData['etudiant_id'] ?? null,
+            'examen_id'   => $copieData['examen_id'] ?? null,
+            'note'        => $copieData['note'] ?? 0.0,
+            'est_en_retard' => $copieData['est_en_retard'] ?? false,
+        ]);
+
+        return $this->db->lastInsertId();
     }
 
-    private function prepare(string $sql, array $datas = []): \PDOStatement
+    public function findAll(): array
     {
-        $prepare = $this->instance
-            ->prepare($sql);
-        $prepare->execute($datas);
-        return $prepare;
+        $sql = "SELECT * FROM copies_examen";
+        $stmt = $this->db->query($sql);
+
+        return $stmt->fetchAll(\PDO::FETCH_OBJ);
     }
 
-    protected function executeQuery(string $sql, array $datas = [], bool $single = true): mixed
+    public function findById(int|string $id): ?object
     {
-        $statement = self::prepare($sql, $datas);
-        return $single ? $statement->fetch(\PDO::FETCH_OBJ) : $statement->fetchAll(\PDO::FETCH_OBJ);
-    }
+        $sql = "SELECT * FROM copies_examen WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id' => $id]);
 
-    protected function executeUpdate(string $sql, array $datas = []): int|string
-    {
-        $statement = self::prepare($sql, $datas);
-        return (str_starts_with(strtoupper(trim($sql)), 'INSERT')) ? $this->instance
-            ->lastInsertId() : $statement->rowCount();
-    }
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
 
-    protected function getAllData(string $tableName): array
-    {
-        $sql = "SELECT * FROM $tableName";
-        return self::query($sql, false);
+        return $result !== false ? $result : null;
     }
 }
