@@ -4,7 +4,7 @@ namespace App\Repository;
 
 abstract class BaseRepository
 {
-    private  \PDO $instance;
+    protected  \PDO $instance;
 
     protected function __construct(\PDO $pdo)
     {
