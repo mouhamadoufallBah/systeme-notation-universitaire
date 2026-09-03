@@ -2,21 +2,22 @@
 
 namespace App\Repository;
 
+use App\Dto\CopieDetailDTO;
+use App\Dto\CopieListItemDTO;
 use App\Entity\CopieExamen;
 
-abstract class PdoCopieExamenRepository extends BaseRepository implements CopieExamenRepositoryInterface
+class PdoCopieExamenRepository extends BaseRepository implements CopieExamenRepositoryInterface
 {
-    private \PDO $db;
 
     public function __construct(\PDO $db)
     {
-        $this->db = $db;
+        parent::__construct($db);
     }
 
     public function save(CopieExamen $copieExamen): int|string
     {
-        $sql = "INSERT INTO copies_examen (etudiant_id, examen_id, note, est_en_retard) 
-                VALUES (:etudiant_id, :examen_id, :note, :est_en_retard)";
+        $sql = "INSERT INTO copies_examen (note_brute, note_finale, penalite_appliquee, date_depot, date_limite) 
+                VALUES (:note_brute, :note_finale, :penalite_appliquee, :date_depot, :date_limite)";
 
         $this->executeUpdate($sql, [
             'note_brute'         => $copieExamen->getNoteBrute(),
@@ -26,7 +27,7 @@ abstract class PdoCopieExamenRepository extends BaseRepository implements CopieE
             'date_limite'        => $copieExamen->getDateLimite()->format('Y-m-d H:i:s'),
         ]);
 
-        return $this->db->lastInsertId();
+        return $this->instance->lastInsertId();
     }
 
     public function findAll(): array
@@ -34,14 +35,17 @@ abstract class PdoCopieExamenRepository extends BaseRepository implements CopieE
         $sql = "SELECT * FROM copies_examen";
         $copieExamens = $this->query($sql, false);
 
-        return $copieExamens;
+        return array_map(fn($copie) => CopieListItemDTO::fromEntity($copie), $copieExamens);
     }
 
     public function findById(int|string $id): ?object
     {
         $sql = "SELECT * FROM copies_examen WHERE id = :id";
-        $copieExamens = $this->executeQuery($sql,  ['id' => $id], true);
+        $copieExamen = $this->executeQuery($sql,  ['id' => $id], true);
+        if (!$copieExamen) {
+            return null;
+        }
 
-        return $copieExamens;
+        return CopieDetailDTO::fromEntity($copieExamen);
     }
 }

@@ -12,9 +12,15 @@ class CopieExamenController
         private SoumissionCopieService $soumissionService
     ) {}
 
+    public function index(): void
+    {
+        $copies = $this->soumissionService->getAllCopies();
+        require_once BASE_PATH . '/templates/copie/list.html.php';
+    }
+
     public function form(): void
     {
-        require_once BASE_PATH . '/templates/copie/form.php';
+        require_once BASE_PATH . '/templates/copie/form.html.php';
     }
 
     public function store(): void
@@ -24,7 +30,6 @@ class CopieExamenController
                 header('Location: /copie/form');
                 exit;
             }
-
             $noteBrute  = (float) $_POST['note_brute'];
             $dateDepot  =  new \DateTimeImmutable($_POST['date_depot']);
             $dateLimite =   new \DateTimeImmutable($_POST['date_limite']);
@@ -38,21 +43,31 @@ class CopieExamenController
 
             $copie = $this->soumissionService->save($dto);
 
-            header('Location: /copie/list');
+            header('Location: /copies');
             exit;
         } catch (Exception $e) {
+            http_response_code(400);
             $errorMessage = $e->getMessage();
-            require_once BASE_PATH . '/templates/error.php';
         }
-    }
-
-    public function index(): void
-    {
-        require_once BASE_PATH . '/templates/copie/list.php';
     }
 
     public function show(): void
     {
-        require_once BASE_PATH . '/templates/copie/detail.php';
+        $id = $_GET['id'] ?? null;
+
+        if (!$id) {
+            header('Location: /copies');
+            exit;
+        }
+
+        $copie = $this->soumissionService->getCopyById($id);
+
+        if (!$copie) {
+            $errorMessage = "Copie d'examen introuvable.";
+            require_once BASE_PATH . '/templates/errors/erreur.html.php';
+            return;
+        }
+
+        require_once BASE_PATH . '/templates/copie/detail.html.php';
     }
 }
